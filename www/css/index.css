@@ -1,62 +1,189 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
 * {
     -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
 }
+
+*, *:before, *:after {
+  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+ }
 
 body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    background-color:#E4E4E4;
-    background-image:linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
-    background-image:-webkit-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
-    background-image:-ms-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
-    background-image:-webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        color-stop(0, #A7A7A7),
-        color-stop(0.51, #E4E4E4)
-    );
+    background-color:rgb(65,64,66);
     background-attachment:fixed;
     font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
     font-size:12px;
     height:100%;
     margin:0px;
     padding:0px;
-    text-transform:uppercase;
     width:100%;
 }
 
-/* Portrait layout (default) */
-.app {
-    background:url(../img/logo.png) no-repeat center top; /* 170px x 200px */
-    position:absolute;             /* position in the center of the screen */
-    left:50%;
-    top:50%;
-    height:50px;                   /* text area height */
-    width:225px;                   /* text area width */
-    text-align:center;
-    padding:180px 0px 0px 0px;     /* image height is 200px (bottom 20px are overlapped with text) */
-    margin:-115px 0px 0px -112px;  /* offset vertical: half of image height and text area height */
-                                   /* offset horizontal: half of text area width */
+@font-face{
+    font-family: 'franchise';
+    src: url('../fonts/Franchise-Bold.ttf') format('opentype');
+}
+
+.footer{
+    position:fixed;
+    bottom:0;
+    right: 0;
+    left:0;
+}
+
+.nav{
+    height: 40px;
+    background-color: rgb(255,255,255);
+}
+
+.header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background-color: rgb(255,255,255);
+}
+
+.quote-color{
+    color: rgb(188,190,192);
+}
+
+.franchise{
+    font-family: 'franchise' sans-serif;
+}
+
+.serif{
+    font-family: georgia serif;
+}
+
+.large{
+    font-size: 2.3em;
+}
+
+.smaller-font{
+    font-size: .75em;
+}
+
+.logo{
+    font-size: 2.5em;
+    text-indent: -25%;
+}
+
+.quote-input{
+    background-color: rgba(255,255,255,0.2);
+    border: none;
+    color: rgb(255,255,255);
+    font-size: .8em;
+    box-shadow: inset 1px 1px 5px rgba(0,0,0,0.8);
+    width: 240px;
+}
+
+.new-quote{
+    height:15em;
+    padding: .5em .75em;
+}
+
+.small-pad-left{
+    padding-left: .5em;
+}
+
+.button{
+    color:rgb(196,196,196);
+}
+
+.button.active{
+    color: rgb(0,0,0);
+}
+
+.nav .button.main{
+    width: 60px;
+    height: 150%;
+    border-radius: 12px;
+    margin-top: -10px;
+    background: rgb(209, 211, 212);
+    font-size: 1.5em;
+    box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.6);
+    line-height: 2.8em;
+    margin-left: -30px;
+    padding-left: 0;
+    left: 50%;
+}
+
+.button.main.add{
+    font-size: 40px;
+    line-height: 1.5em;
+}
+
+.nav .button{
+    position: absolute;
+    top: 0;
+    min-height: 40px;
+    min-width: 40px;
+    line-height: 3.8em;
+    padding-left: .5em;
+}
+
+.nav .button a{
+    height: 100%;
+    width: 100%;
+}
+
+.left-1{
+    left: 0;
+}
+
+.right-1{
+    right: 16%;
+}
+
+.right-2{
+    right: 0;
+}
+
+.center{
+    margin:0 auto;
+    text-align: center;
+}
+.right{
+    float: right;
+}
+
+.left{
+    float: left;
+}
+
+.text-replace{
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.quote{
+    margin:28% 15%;
+}
+
+.bold{
+    font-weight: bold;
+}
+
+.quotation-mark{
+    position: absolute;
+    top: 5%;
+    left: 5%;
+
+    color: rgb(88,89,91);
+    z-index: -1;
+    font-size: 10em;
+}
+
+.logo{
+    text-transform: uppercase;
+}
+
+.block{
+    display: block;
 }
 
 /* Landscape layout (with min-width) */
@@ -66,6 +193,24 @@ body {
         padding:75px 0px 75px 170px;  /* padding-top + padding-bottom + text area = image height */
         margin:-90px 0px 0px -198px;  /* offset vertical: half of image height */
                                       /* offset horizontal: half of image width and text area width */
+    }
+}
+
+@media screen and (min-width:800px){
+    body{
+        font-size: 1.6em;
+    }
+
+    .logo{
+        font-size: 1.2em;
+    }
+
+    .footer.nav{
+        font-size: 1em;
+    }
+
+    .footer .button{
+        line-height: 1em;
     }
 }
 

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-var app = {
+var app = action.eventMe({
     // Application Constructor
     initialize: function() {
         this.bindEvents();
@@ -27,6 +27,11 @@ var app = {
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
+        alert('binding');
+        $('.add').on('click', function(){
+            alert('nav to add');
+            this.emit('navigate:add');
+        });
     },
     // deviceready Event Handler
     //
@@ -46,4 +51,4 @@ var app = {
 
         console.log('Received Event: ' + id);
     }
-};
+});
