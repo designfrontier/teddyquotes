@@ -24,6 +24,8 @@ var app = action.eventMe({
                 text: $('.new-quote').val()
                 , source: $('[name="quote-source"]').val()
             });
+        }).on('click', '.nav-main', function(){
+            that.emit('navigate:main');
         });
 
         that.listen('save:success', function(){
