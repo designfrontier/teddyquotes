@@ -66,13 +66,25 @@ var dataHandler = action.eventMe({
     //      and object
     //      used like this: that.emit('data:quote:get', 1234);
     , getQuote: function(quoteId){
-        var that = window.dataHandler;
+        var that = window.dataHandler
+            , map = function(doc){
+                        if(doc.isQuote && !doc._used){
+                            emit(doc);
+                        } 
+                    }
+            , i;
 
         if(typeof quoteId === 'undefined'){
             //fresh random quote!
-            that.emit('data:quote:set', that.newQuote({
-                text: 'The only man who makes no mistakes is the man who never does anything.'
-            }));
+            that.pouch.query({map:map}, function(err, response){
+
+                console.log(response);
+                that.emit('data:quote:set', response.rows[that.randomInt(response.rows.length)].key);
+            });
+
+            // that.emit('data:quote:set', that.newQuote({
+            //     text: 'The only man who makes no mistakes is the man who never does anything.'
+            // }));
         }else{
             //specific quote!
             alert('give me that quote!' + quoteId);
@@ -83,7 +95,10 @@ var dataHandler = action.eventMe({
     }
 
     , getQuoteByDate: function(quoteDate){
+        var that = window.dataHandler;
+
         console.warn('implement get by date');
+
     }
 
     , saveNew: function(dataIn){
@@ -110,5 +125,12 @@ var dataHandler = action.eventMe({
         }
 
         return quote;
+    }
+
+    , randomInt: function(maxIn, minIn){
+        var max = maxIn || 10
+            , min = minIn || 1;
+
+        return Math.floor(Math.random() * (max - min + 1) + min) - 1;
     }
 }).init();
