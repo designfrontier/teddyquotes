@@ -46,12 +46,12 @@ var app = action.eventMe({
             templateTarget.html(Handlebars.templates.addTemplate());
         });
 
-        that.listen('data:quote:set', function(quoteObj){
+        that.listen('quote:set', function(quoteObj){
             templateTarget.html(Handlebars.templates.main(quoteObj));
         });
 
         that.listen('navigate:main', function(){
-            that.emit('data:quote:get');
+            that.emit('quote:get');
         });
 
     }

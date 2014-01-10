@@ -4,10 +4,7 @@ var dataHandler = action.eventMe({
         //init function!
         var that = this;
 
-        that.pouch = new PouchDB('teddy-quotes');
-
         that.dbSetup();
-
         that.dataEventBindings();
 
         return that;
@@ -15,6 +12,8 @@ var dataHandler = action.eventMe({
 
     , dbSetup: function(){
         var that = this;
+        
+        that.pouch = new PouchDB('teddy-quotes');
 
         //check to see if we have an object for holding date/quote relationship
         //  if not create it
@@ -53,7 +52,7 @@ var dataHandler = action.eventMe({
     //  otherwise give up a random quote
     //      the ID should be a string/int not
     //      and object
-    //      used like this: that.emit('data:quote', 1234);
+    //      used like this: that.emit('data:quote:get', 1234);
     , getQuote: function(quoteId){
         var that = window.dataHandler;
 
@@ -65,8 +64,14 @@ var dataHandler = action.eventMe({
         }else{
             //specific quote!
             alert('give me that quote!' + quoteId);
+
+            
         }
 
+    }
+
+    , getQuoteByDate: function(quoteDate){
+        console.warn('implement get by date');
     }
 
     , saveNew: function(dataIn){
