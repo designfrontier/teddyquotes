@@ -2,3 +2,4 @@
 plugins/
 platforms/
 static-node.js
+build.bat
