@@ -59,7 +59,7 @@ var app = action.eventMe({
         });
 
         that.listen('navigate:main', function(){
-            that.emit('data:quote:get');
+            that.emit('data:quote');
         });
 
     }

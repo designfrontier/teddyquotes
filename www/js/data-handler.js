@@ -57,6 +57,7 @@ var dataHandler = action.eventMe({
 
         that.listen('save:new', that.saveNew);
         that.listen('data:quote:get', that.getQuote);
+        that.listen('data:quote', that.getQuoteByDate);
     }
 
     //two variations here. If the event has an ID
@@ -68,7 +69,7 @@ var dataHandler = action.eventMe({
     , getQuote: function(quoteId){
         var that = window.dataHandler
             , map = function(doc){
-                        if(doc.isQuote && !doc._used){
+                        if(doc.isQuote && !doc.used){
                             emit(doc);
                         } 
                     }
@@ -77,8 +78,14 @@ var dataHandler = action.eventMe({
         if(typeof quoteId === 'undefined'){
             //fresh random quote!
             that.pouch.query({map:map}, function(err, response){
+                var quote = response.rows[that.randomInt(response.rows.length)].key;
+                console.log(quote);
+                quote.used = that.formatDate();
 
-                console.log(response);
+                that.pouch.put(quote, function(e,r){
+                    console.log(e,r);
+                });
+
                 that.emit('data:quote:set', response.rows[that.randomInt(response.rows.length)].key);
             });
 
@@ -94,11 +101,33 @@ var dataHandler = action.eventMe({
 
     }
 
-    , getQuoteByDate: function(quoteDate){
-        var that = window.dataHandler;
+    , getQuoteByDate: function(quoteDateIn){
+        var that = window.dataHandler
+            , date = new Date()
+            , map = function(){
+                var quoteDate = that.formatDate(quoteDateIn);
 
-        console.warn('implement get by date');
+                return function(doc){
+                    if(doc.used === '1-10-2014'){
+                        emit(doc);
+                    }
+                };
+            }(that);
 
+        that.pouch.query({map:map}, function(err, response){
+            if(response.total_rows > 0){
+                that.emit('data:quote:set', response.rows[0].key);
+            }else{
+                that.emit('data:quote:get');
+            }
+        });
+
+    }
+
+    , formatDate: function(dateIn){
+        var d = (typeof dateIn === 'undefined') ? new Date() : new Date(dateIn);
+
+        return d.getUTCMonth() + 1 + '-' + d.getDate() + '-' + d.getFullYear();
     }
 
     , saveNew: function(dataIn){
@@ -122,6 +151,7 @@ var dataHandler = action.eventMe({
             , dateCreated: dataIn.dateCreated || new Date()
             , synced: false
             , isQuote: true
+            , used: false
         }
 
         return quote;
