@@ -23,7 +23,13 @@ var dataHandler = action.eventMe({
                 that.pouch.put({
                     _id: 'quotedatemapping'
                     , quotes: []
+                }, function(){
+                    that.pouch.get('qoutedatemapping', function(err, doc){
+                        that.qouteDateMapping = doc;
+                    });
                 });
+            }else{
+                that.qouteDateMapping = doc;
             }
         });
 
@@ -35,9 +41,15 @@ var dataHandler = action.eventMe({
                 that.pouch.put({
                     _id: 'unsyncedquotes'
                     , quotesToSync: []
+                }, function(){
+                    that.pouch.get('unsyncedquotes', function(err, doc){
+                        that.unsyncedQuotes = doc;
+                    });
                 });
+            }else{
+                that.unsyncedQuotes = doc;
             }
-        });
+        });      
     }
 
     , dataEventBindings: function(){
@@ -76,9 +88,9 @@ var dataHandler = action.eventMe({
 
     , saveNew: function(dataIn){
         var data = dataIn
-            that = this;
+            that = window.dataHandler;
 
-        that.pouch.put(that.newQuote(dataIn), function(err, response){
+        that.pouch.post(that.newQuote(dataIn), function(err, response){
             if(err){
                 that.emit('system:error:save');
             }else{
