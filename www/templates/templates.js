@@ -18,7 +18,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (helper = helpers.text) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.text); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\r\n</div>\r\n<div class=\"footer nav\">\r\n    <div class=\"button active left-1\"><</div>\r\n    <div class=\"button main active center add\">+</div>\r\n    <div class=\"button right-2\">></div>\r\n    <div class=\"button right-1 active\">cal.</div>\r\n</div>";
+    + "\r\n</div>\r\n<div class=\"footer nav\">\r\n    <div class=\"button main active center add\">+</div>\r\n    <div class=\"button right-2\">></div>\r\n    <div class=\"button right-1 active\">cal.</div>\r\n</div>";
   return buffer;
   });
 })();
