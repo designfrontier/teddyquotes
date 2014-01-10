@@ -79,19 +79,12 @@ var dataHandler = action.eventMe({
             //fresh random quote!
             that.pouch.query({map:map}, function(err, response){
                 var quote = response.rows[that.randomInt(response.rows.length)].key;
-                console.log(quote);
                 quote.used = that.formatDate();
 
-                that.pouch.put(quote, function(e,r){
-                    console.log(e,r);
-                });
+                that.pouch.put(quote);
 
                 that.emit('data:quote:set', response.rows[that.randomInt(response.rows.length)].key);
             });
-
-            // that.emit('data:quote:set', that.newQuote({
-            //     text: 'The only man who makes no mistakes is the man who never does anything.'
-            // }));
         }else{
             //specific quote!
             alert('give me that quote!' + quoteId);
