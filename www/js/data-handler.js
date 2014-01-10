@@ -65,7 +65,7 @@ var dataHandler = action.eventMe({
             //specific quote!
             alert('give me that quote!' + quoteId);
 
-            
+            // that.pouch.query({map:})
         }
 
     }
@@ -78,7 +78,13 @@ var dataHandler = action.eventMe({
         var data = dataIn
             that = this;
 
-        that.pouch.put(that.newQuote(dataIn));
+        that.pouch.put(that.newQuote(dataIn), function(err, response){
+            if(err){
+                that.emit('system:error:save');
+            }else{
+                that.emit('save:success');
+            }
+        });
     }
 
     , newQuote: function(dataIn){

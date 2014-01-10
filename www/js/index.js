@@ -25,6 +25,12 @@ var app = action.eventMe({
                 , source: $('[name="quote-source"]').val()
             });
         });
+
+        that.listen('save:success', function(){
+            $('textarea, input').val('');
+
+            alert('saved successfully!');
+        });
     }
     // deviceready Event Handler
     //
@@ -46,12 +52,12 @@ var app = action.eventMe({
             templateTarget.html(Handlebars.templates.addTemplate());
         });
 
-        that.listen('quote:set', function(quoteObj){
+        that.listen('data:quote:set', function(quoteObj){
             templateTarget.html(Handlebars.templates.main(quoteObj));
         });
 
         that.listen('navigate:main', function(){
-            that.emit('quote:get');
+            that.emit('data:quote:get');
         });
 
     }
