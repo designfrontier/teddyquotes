@@ -6,9 +6,39 @@ var dataHandler = action.eventMe({
 
         that.pouch = new PouchDB('teddy-quotes');
 
+        that.dbSetup();
+
         that.dataEventBindings();
 
         return that;
+    }
+
+    , dbSetup: function(){
+        var that = this;
+
+        //check to see if we have an object for holding date/quote relationship
+        //  if not create it
+        that.pouch.get('quotedatemapping', function(err, doc){
+            if(typeof doc === 'undefined'){
+                //create it!
+                that.pouch.put({
+                    _id: 'quotedatemapping'
+                    , quotes: []
+                });
+            }
+        });
+
+        //check for object for created unsynced quotes
+        //  if not create it
+        that.pouch.get('unsyncedquotes', function(err, doc){
+            if(typeof doc === 'undefined'){
+                //create it!
+                that.pouch.put({
+                    _id: 'unsyncedquotes'
+                    , quotesToSync: []
+                });
+            }
+        });
     }
 
     , dataEventBindings: function(){
@@ -29,9 +59,9 @@ var dataHandler = action.eventMe({
 
         if(typeof quoteId === 'undefined'){
             //fresh random quote!
-            that.emit('data:quote:set', {
+            that.emit('data:quote:set', that.newQuote({
                 text: 'The only man who makes no mistakes is the man who never does anything.'
-            });
+            }));
         }else{
             //specific quote!
             alert('give me that quote!' + quoteId);
@@ -53,6 +83,7 @@ var dataHandler = action.eventMe({
             , image: dataIn.image || ''
             , dateCreated: dataIn.dateCreated || new Date()
             , synced: false
+            , isQuote: true
         }
 
         return quote;
