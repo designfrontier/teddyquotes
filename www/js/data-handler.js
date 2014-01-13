@@ -10,6 +10,17 @@ var dataHandler = action.eventMe({
         return that;
     }
 
+    , dataEventBindings: function(){
+        var that = this;
+
+        that.listen('save:new', that.saveNew);
+        that.listen('data:quote:get', that.getQuote);
+        that.listen('data:quote', that.getQuoteByDate);
+
+        //data sync listener
+        that.listen('data:sync', that.syncToServer);
+    }
+
     , syncToServer: function(){
         var that = window.dataHandler
             , map = function(doc){
@@ -17,7 +28,7 @@ var dataHandler = action.eventMe({
                     emit(doc);
                 }
             };
-
+        
         that.pouch.query({map:map}, function(err, response){
             var i = 0;
 
@@ -26,7 +37,7 @@ var dataHandler = action.eventMe({
                 //push to the server
 
                 //if successful push then update the sync flag locally
-                
+
             }
         });
     }
@@ -90,17 +101,6 @@ var dataHandler = action.eventMe({
             }
         });
 
-    }
-
-    , dataEventBindings: function(){
-        var that = this;
-
-        that.listen('save:new', that.saveNew);
-        that.listen('data:quote:get', that.getQuote);
-        that.listen('data:quote', that.getQuoteByDate);
-
-        //data sync listener
-        that.listen('data:sync', that.syncToServer);
     }
 
     //two variations here. If the event has an ID
