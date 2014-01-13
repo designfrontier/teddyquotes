@@ -15,6 +15,7 @@ var app = action.eventMe({
     , bindEvents: function() {
         var that = this;
 
+
         document.addEventListener('deviceready', this.onDeviceReady, false);
 
         $(document).on('click', '.add', function(){

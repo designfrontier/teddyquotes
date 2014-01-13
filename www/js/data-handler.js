@@ -11,7 +11,12 @@ var dataHandler = action.eventMe({
     }
 
     , dbSetup: function(){
-        var that = this;
+        var that = this
+            , map = function(doc){
+                if(doc.isQuote && !doc.used){
+                    emit(doc);
+                } 
+            };
         
         that.pouch = new PouchDB('teddy-quotes');
 
@@ -49,7 +54,21 @@ var dataHandler = action.eventMe({
             }else{
                 that.unsyncedQuotes = doc;
             }
-        });      
+        });
+
+        //check to make sure we have some quotes to start
+        //  TODO:this should actually be a server sync with a loader
+        that.pouch.query({map:map}, function(err, response){
+            if(response.total_rows === 0){
+                that.pouch.post(that.newQuote({
+                    text: 'In any moment of decision, the best thing you can do is the right thing, the next best thing is the wrong thing, and the worst thing you can do is nothing'
+                    , source: 'the internet'
+                }), function(){
+                    that.emit('data:quote'); //trigger the get event
+                });
+            }
+        });
+
     }
 
     , dataEventBindings: function(){
