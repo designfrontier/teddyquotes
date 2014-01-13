@@ -29,12 +29,12 @@ var dataHandler = action.eventMe({
                     _id: 'quotedatemapping'
                     , quotes: []
                 }, function(){
-                    that.pouch.get('qoutedatemapping', function(err, doc){
-                        that.qouteDateMapping = doc;
+                    that.pouch.get('quotedatemapping', function(err, doc){
+                        that.quotedatemapping = doc;
                     });
                 });
             }else{
-                that.qouteDateMapping = doc;
+                that.quotedatemapping = doc;
             }
         });
 
