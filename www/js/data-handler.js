@@ -18,7 +18,12 @@ var dataHandler = action.eventMe({
         that.listen('data:quote', that.getQuoteByDate);
 
         //data sync listener
-        that.listen('data:sync', that.syncToServer);
+        // that.listen('data:sync', that.syncToServer);
+
+        //network status watchers
+        that.listen('network:online', that.setOnline);
+        that.listen('network:offline', that.setOffline);
+        that.listen('network:online', that.syncToServer);
     }
 
     , syncToServer: function(){
@@ -28,18 +33,32 @@ var dataHandler = action.eventMe({
                     emit(doc);
                 }
             };
-        
-        that.pouch.query({map:map}, function(err, response){
-            var i = 0;
+            
+        if(that.online){ //check that we are online
+            that.pouch.query({map:map}, function(err, response){
+                var i = 0;
 
-            for(i = 0; i < response.rows.length; i++){
-                console.log(response.rows[i].key);
-                //push to the server
+                for(i = 0; i < response.rows.length; i++){
+                    console.log(response.rows[i].key);
+                    //push to the server
 
-                //if successful push then update the sync flag locally
+                    //if successful push then update the sync flag locally
 
-            }
-        });
+                }
+            });
+        }
+    }
+
+    , setOffline: function(){
+        var that = window.dataHandler;
+
+        that.online = false;
+    }
+
+    , setOnline: function(){
+        var that = window.dataHandler;
+
+        that.online = true;
     }
 
     , dbSetup: function(){

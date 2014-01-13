@@ -9,7 +9,20 @@ var configuration = action.eventMe({
 
     , setupListeners: function(){
         var that = this;
+
+        //network change events
+        document.addEventListener('offline', this.onOffline, false);
+        document.addEventListener('online', this.onOnline, false);
+
         that.listen('network:getStatus', that.checkNetworkStatus);
+    }
+
+    , onOnline: function(){
+        action.events.emit('network:online');
+    }
+
+    , onOffline: function(){
+        action.events.emit('network:offline');
     }
 
     , checkNetworkStatus: function(){
