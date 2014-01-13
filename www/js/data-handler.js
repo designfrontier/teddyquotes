@@ -10,6 +10,27 @@ var dataHandler = action.eventMe({
         return that;
     }
 
+    , syncToServer: function(){
+        var that = window.dataHandler
+            , map = function(doc){
+                if(!doc.synced && doc._id !== 'unsyncedquotes' && doc._id !== 'quotedatemapping'){
+                    emit(doc);
+                }
+            };
+
+        that.pouch.query({map:map}, function(err, response){
+            var i = 0;
+
+            for(i = 0; i < response.rows.length; i++){
+                console.log(response.rows[i].key);
+                //push to the server
+
+                //if successful push then update the sync flag locally
+                
+            }
+        });
+    }
+
     , dbSetup: function(){
         var that = this
             , map = function(doc){
@@ -77,6 +98,9 @@ var dataHandler = action.eventMe({
         that.listen('save:new', that.saveNew);
         that.listen('data:quote:get', that.getQuote);
         that.listen('data:quote', that.getQuoteByDate);
+
+        //data sync listener
+        that.listen('data:sync', that.syncToServer);
     }
 
     //two variations here. If the event has an ID
