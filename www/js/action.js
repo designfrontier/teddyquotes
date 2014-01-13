@@ -303,13 +303,6 @@ var action = function(){
                                 required[index].fetch();
                         }
 
-<<<<<<< Updated upstream
-                        returnObject.listen('system:trace', function(emitterIDIn){
-                                if(this.emitterId === emitterIDIn){
-                                        this.emit('system:addTraced', this);
-                                }
-                        }, returnObject);
-=======
                         truthy = truthy && required[index].isReady();
                     }
 
@@ -347,135 +340,134 @@ var action = function(){
 
             return returnObject;
         }
->>>>>>> Stashed changes
 
         , modelMe: function(objectIn){
-                //this is the module for creating a data model object
-                var newModel = this.eventMe({})
-                        , attributes = {}
-                        , changes = [];
+            //this is the module for creating a data model object
+            var newModel = this.eventMe({})
+                , attributes = {}
+                , changes = [];
 
-                newModel.get = function(attributeName){
-                        return attributes[attributeName];
-                }
+            newModel.get = function(attributeName){
+                return attributes[attributeName];
+            }
 
-                newModel.set = function(attributeName, attributeValue){
-                        var key;
+            newModel.set = function(attributeName, attributeValue){
+                var key;
 
-                        if(typeof attributeName === 'object'){
-                                //well... this is an object... iterate and rock on
-                                for(key in attributeName){
-                                        if(attributeName.hasOwnProperty(key)){
-                                                //this attribute does not belong to the prototype. Good.
+                if(typeof attributeName === 'object'){
+                    //well... this is an object... iterate and rock on
+                    for(key in attributeName){
+                        if(attributeName.hasOwnProperty(key)){
+                            //this attribute does not belong to the prototype. Good.
 
-                                                //TODO: maybe make this do a deep copy to prevent
-                                                //        pass by reference or switch to clone()
-                                                if(key !== 'destroy' && key !== 'fetch' && key !== 'save'){
-                                                        attributes[key] = attributeName[key];
-                                                        this.emitLocal('attribute:changed', key);
-                                                } else {
-                                                        this[key] == attributeName[key];
-                                                }
-                                        }
-                                }
-                        } else{
-                                if(attributeName !== 'destroy' && attributeName !== 'fetch' && attributeName !== 'save'){
-                                        attributes[attributeName] = attributeValue;
-                                        this.emitLocal('attribute:changed', attributeName);
-                                } else {
-                                        this[attributeName] == attributeValue;
-                                }
+                            //TODO: maybe make this do a deep copy to prevent
+                            //        pass by reference or switch to clone()
+                            if(key !== 'destroy' && key !== 'fetch' && key !== 'save'){
+                                attributes[key] = attributeName[key];
+                                this.emitLocal('attribute:changed', key);
+                            } else {
+                                this[key] == attributeName[key];
+                            }
                         }
+                    }
+                } else{
+                    if(attributeName !== 'destroy' && attributeName !== 'fetch' && attributeName !== 'save'){
+                        attributes[attributeName] = attributeValue;
+                        this.emitLocal('attribute:changed', attributeName);
+                    } else {
+                        this[attributeName] == attributeValue;
+                    }
+                }
+            }
+
+            newModel.flatten = function(){
+                return attributes;
+            }
+
+            newModel.fetch = function(){
+                var requestUrl = this.get('url');
+
+                if(typeof requestUrl !== 'undefined'){
+
+                } else {
+                    //TODO: probably should trigger some sort of error...
+                    throw new action.Error('http', 'No URL defined');
+                }
+            }
+
+            newModel.save = function(){
+                //TODO make this talk to a server with the URL
+                //TODO make it only mark the saved changes clear
+                var requestUrl = this.get('url');
+
+                if(typeof requestUrl !== 'undefined'){
+                    
+                    //only do this on success...
+                    changes = [];
+                } else {
+                    //TODO: probably should trigger some sort of error...
+                    throw new action.Error('http', 'No URL defined');
+                }
+            }
+
+            newModel.getChanges = function(){
+                return changes;
+            }
+
+            newModel.clear = function(){
+                attributes = {};
+            }
+
+            newModel.destroy = function(){
+                //TODO not really working... should get rid of this thing
+                //        and all of its parameters
+                var me = this;
+
+                setTimeout(function(){
+                    delete me;
+                },0); // not quite working...
+
+                for(key in this){
+                    delete this[key];
                 }
 
-                newModel.flatten = function(){
-                        return attributes;
-                }
+                //TODO this still doesn't kill the attributes or changes
+                //        private data
+            }
 
-                newModel.fetch = function(){
-                        var requestUrl = this.get('url');
+            newModel.set(objectIn); //set the inital attributes
 
-                        if(typeof requestUrl !== 'undefined'){
+            newModel.listenLocal('attribute:changed', function(nameIn){
+                changes.push(nameIn);
+            }, this);
 
-                        } else {
-                                //TODO: probably should trigger some sort of error...
-                                throw new action.Error('http', 'No URL defined');
-                        }
-                }
-
-                newModel.save = function(){
-                        //TODO make this talk to a server with the URL
-                        //TODO make it only mark the saved changes clear
-                        var requestUrl = this.get('url');
-
-                        if(typeof requestUrl !== 'undefined'){
-                                
-                                //only do this on success...
-                                changes = [];
-                        } else {
-                                //TODO: probably should trigger some sort of error...
-                                throw new action.Error('http', 'No URL defined');
-                        }
-                }
-
-                newModel.getChanges = function(){
-                        return changes;
-                }
-
-                newModel.clear = function(){
-                        attributes = {};
-                }
-
-                newModel.destroy = function(){
-                        //TODO not really working... should get rid of this thing
-                        //        and all of its parameters
-                        var me = this;
-
-                        setTimeout(function(){
-                                delete me;
-                        },0); // not quite working...
-
-                        for(key in this){
-                                delete this[key];
-                        }
-
-                        //TODO this still doesn't kill the attributes or changes
-                        //        private data
-                }
-
-                newModel.set(objectIn); //set the inital attributes
-
-                newModel.listenLocal('attribute:changed', function(nameIn){
-                        changes.push(nameIn);
-                }, this);
-
-                return newModel;
+            return newModel;
         }
 
         , eventStore: {}
 
         , trace: function(emitterIdIn){
-                //log out the function that has the emitterId attached
-                
-                //create the traced object/stack
-                action.traced = action.modelMe({
-                        stack: []
-                        , emitterId: emitterIdIn
-                });
+            //log out the function that has the emitterId attached
+            
+            //create the traced object/stack
+            action.traced = action.modelMe({
+                stack: []
+                , emitterId: emitterIdIn
+            });
 
-                action.traced.listen('system:addTraced', function(objectIn){
-                        this.get('stack').push(objectIn);
-                }, action.traced);
+            action.traced.listen('system:addTraced', function(objectIn){
+                this.get('stack').push(objectIn);
+            }, action.traced);
 
-                //trigger the event that will cause the trace
-                action.events.emit('system:trace', emitterIdIn);
+            //trigger the event that will cause the trace
+            action.events.emit('system:trace', emitterIdIn);
         }
 
         , Error: function(typeIn, messageIn){
-                return {
-                        type: typeIn
-                        , message: messageIn
-                }
+            return {
+                type: typeIn
+                , message: messageIn
+            }
         }
     };
 
@@ -484,8 +476,8 @@ var action = function(){
 
     //global error handler y'all
     window.onerror = function(error){
-            console.log('Error occured');
-            console.warn(error);
+        console.log('Error occured');
+        console.warn(error);
     }
 
     //return the tweaked function
